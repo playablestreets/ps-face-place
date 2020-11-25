@@ -101,7 +101,7 @@ function setup() {
 	
 	canvas = createCanvas(windowWidth, windowHeight);
 	canvas.position(0, 0);
-	frameRate(10);
+	frameRate(4);
 	
 	// console.log(imgFaceBuffer);
 
@@ -172,15 +172,24 @@ function draw() {
 
 	// background(0, 255, 0)
 	// background(255, 1);
-	background(255, 100);
-	fill(255, 100);
+	background(200, 200);
+	fill(255);
 	stroke(0);
 	
 	
 	let size = min(width, height);
 	
-	if(imgPlace)
-		image(imgPlace, width/2 - size/2, height/2 - size/2, size, size);
+
+	if(imgPlace){
+		push();
+		translate(imgPlace.width/2, imgPlace.height/2,);
+		rotate(random(-0.0005, 0.0005));
+		translate(-imgPlace.width/2, -imgPlace.height/2,);
+		translate(width/2 - size/2, height/2 - size/2);
+		translate(random(1.0), random(1.0));
+		image(imgPlace, 0, 0, size, size);
+		pop();
+	}
 	
 	blendMode(MULTIPLY);
 	
@@ -203,8 +212,18 @@ function draw() {
 
 	fill(255);
 	let faceScale = 0.8
-	if(imgFace)
-		image(imgFace, 0, height-size * faceScale, size * faceScale, size * faceScale);
+	if(imgFace){
+		push();
+		translate(imgFace.width/2, imgFace.height/2,);
+		rotate(random(-0.0005, 0.0005));
+		translate(-imgFace.width/2, -imgFace.height/2,);
+
+		translate(0, height-size * faceScale);
+		translate(random(1.0), random(1.0));
+		image(imgFace, 0, 0,  size * faceScale,  size * faceScale);
+		pop();
+		// image(imgFace, 0, height-size * faceScale, size * faceScale, size * faceScale);
+	}
 	// pop();
 	
 	drawTouch();
