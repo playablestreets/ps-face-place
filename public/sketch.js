@@ -9,6 +9,15 @@ let imgFace;
 let imgPlace;
 let imgBird;
 
+const bgColors = [
+'#fccd79',
+'#1a74b6',
+'#f2706c',
+'#62af72',
+'#81d2e4',
+'#f06e92'
+];
+
 
 //------------------------------------------------------------------
 //GET DYNAMIC DATA
@@ -139,10 +148,35 @@ function draw() {
 	// clear();
 	resizeCanvas(windowWidth, windowHeight);
 	canvas.position(0, 0);
-	background(0, 255, 0)
+	// background(0, 255, 0)
+	background(255);
 	fill(255);
 	stroke(0);
+	
+	let size = min(width, height);
+	
+	if(imgPlace)
+	image(imgPlace, width/2 - size/2, height/2 - size/2, size, size);
+	
+	blendMode(MULTIPLY);
+	
+	let bgColor = color(bgColors[0]);
+	bgColor.setAlpha(200);
+	background(bgColor);
+	blendMode(BLEND);
+	// background(bgColors[0], 0.5);
+	// background('rgba(255,0,0, 0.1)');
+	
+	// if(imgBird)
+	// 	image(imgBird, 0, 0, size, size);
+	push();
+	// translate(width/2 - size/2, height/2 - size/2);
+	translate(width/2 - size * 0.2, height - size * 0.8);
+	scale(0.7);
 
+	if(imgFace)
+		image(imgFace, 0, 0);
+	pop();
 	
 	drawTouch();
 	if (state === 'loading')  background(255, 0, 0) ;
