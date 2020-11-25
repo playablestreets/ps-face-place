@@ -101,6 +101,7 @@ function setup() {
 	
 	canvas = createCanvas(windowWidth, windowHeight);
 	canvas.position(0, 0);
+	frameRate(10);
 	
 	// console.log(imgFaceBuffer);
 
@@ -154,6 +155,10 @@ function setDisplayState() {
 }
 
 
+function windowResized(){
+	resizeCanvas(windowWidth, windowHeight);
+	
+}
 
 //------------DRAW------------------------------------------------------------
 //------------DRAW------------------------------------------------------------
@@ -164,12 +169,13 @@ function draw() {
 
 	//prepare canvas
 	// clear();
-	resizeCanvas(windowWidth, windowHeight);
-	canvas.position(0, 0);
+
 	// background(0, 255, 0)
-	background(255, 10);
-	fill(255, 10);
+	// background(255, 1);
+	background(255, 100);
+	fill(255, 100);
 	stroke(0);
+	
 	
 	let size = min(width, height);
 	
@@ -195,8 +201,8 @@ function draw() {
 	// translate(width/2 - size * 0.2, height - size * 0.8);
 	// scale(0.7);
 
+	fill(255);
 	let faceScale = 0.8
-
 	if(imgFace)
 		image(imgFace, 0, height-size * faceScale, size * faceScale, size * faceScale);
 	// pop();
