@@ -208,7 +208,7 @@ function draw() {
 	// pop();
 	
 	drawTouch();
-	if (state === 'loading')  background(255, 0, 0) ;
+	if (state === 'loading')  background(0, 0, 0, 50) ;
 }
 
 
@@ -243,15 +243,15 @@ function go() {
 	isPressed = true;
 }
 
-function getColor() {
-	let foundColor = color(
-		...imgFace.get(
-			(mouseX - displayState.drawOffset.x) / maskImageScale / displayState.drawScale,
-			(mouseY - displayState.drawOffset.y) / maskImageScale / displayState.drawScale
-		)
-	);
-	return foundColor;
-}
+// function getColor() {
+// 	let foundColor = color(
+// 		...imgFace.get(
+// 			(mouseX - displayState.drawOffset.x) / maskImageScale / displayState.drawScale,
+// 			(mouseY - displayState.drawOffset.y) / maskImageScale / displayState.drawScale
+// 		)
+// 	);
+// 	return foundColor;
+// }
 
 ///ON RELEASE
 function stop() {
