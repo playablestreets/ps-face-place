@@ -5,6 +5,9 @@ let displayState = {
 };
 let isPressed = false;
 
+let imgFace;
+let imgPlace;
+let imgBird;
 
 
 //------------------------------------------------------------------
@@ -48,9 +51,27 @@ function dataCallback(data) {
 		facesAndPlaces.push(newFaceAndPlace);
 	});
 
+	loadFace();
+	loadPlace();
+	loadBird();
 	setState('ready');
 }
 
+function loadFace(){
+	imgFace = loadImage(facesAndPlaces[0].image.face, ()=>{
+		console.log("loaded face");
+	});
+}
+function loadPlace(){
+	imgPlace = loadImage(facesAndPlaces[0].image.place, ()=>{
+		console.log("loaded place");
+	});
+}
+function loadBird(){
+	imgBird = loadImage(facesAndPlaces[0].image.bird, ()=>{
+		console.log("loaded bird");
+	});
+}
 
 //------------SETUP------------------------------------------------------------
 //------------SETUP------------------------------------------------------------
@@ -67,19 +88,22 @@ function setup() {
 
 
 function setInfoText(text) {
+	console.log(text);
 	document.getElementById('info').innerHTML = text;
 }
 
 
 function setState(newState) {
   if(newState != state){
-    state = newState;
+		state = newState;
+		
     if (state == 'loading') {
 			setInfoText('loading...');
     }
 		else if (state == 'ready') {
 			setInfoText('READY!');
-    }
+		}
+		
 	}
 }
 
@@ -115,19 +139,13 @@ function draw() {
 	// clear();
 	resizeCanvas(windowWidth, windowHeight);
 	canvas.position(0, 0);
-
+	background(0, 255, 0)
 	fill(255);
 	stroke(0);
 
-	if (state == 'loading') {
-		//do something....
-		background(255, 0, 0);
-	}
-	else  {
-		background(0, 255, 0);
-	}
-
+	
 	drawTouch();
+	if (state === 'loading')  background(255, 0, 0) ;
 }
 
 
