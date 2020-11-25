@@ -172,7 +172,7 @@ function draw() {
 
 	// background(0, 255, 0)
 	// background(255, 1);
-	background(200, 200);
+	background(255, 200);
 	fill(255);
 	stroke(0);
 	
