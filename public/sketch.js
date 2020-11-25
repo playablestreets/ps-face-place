@@ -8,14 +8,14 @@ let isPressed = false;
 let imgFace;
 let imgPlace;
 let imgBird;
-
+let bgColor = null;
 const bgColors = [
-'#fccd79',
-'#1a74b6',
-'#f2706c',
-'#62af72',
-'#81d2e4',
-'#f06e92'
+	'#fccd79',
+	'#1a74b6',
+	'#f2706c',
+	'#62af72',
+	'#81d2e4',
+	'#f06e92'
 ];
 
 
@@ -30,66 +30,84 @@ const facesAndPlaces = [];
 function dataCallback(data) {
 	// console.log('received ', data.length, ' results' );
 	// console.log(data);
-
+	
 	const faceAndPlace = {
 		uid: null,
 		title: null,
 		author: null,
 		age: null,
 		postcode: null,
-		image: {
-			face: null,
-			place: null,
-			bird: null,
-		}
-
+		face: null,
+		place: null,
+		bird: null
 	}
-
+	
 	data.forEach((item) => {
 		let newFaceAndPlace = {...faceAndPlace};
-
+		
 		newFaceAndPlace.uid = item.uid;
 		newFaceAndPlace.title = 	item.data.title[0].text;
 		newFaceAndPlace.author = 	item.data.name[0].text;
 		newFaceAndPlace.postcode  = 	item.data.postcode;
 		newFaceAndPlace.age = item.data.age;
-		newFaceAndPlace.image.face = item.data.face_image.url;
-		newFaceAndPlace.image.place = item.data.place_image.url;
-		newFaceAndPlace.image.bird = item.data.bird.url;
+		newFaceAndPlace.face = item.data.face_image.url;
+		newFaceAndPlace.place = item.data.place_image.url;
+		newFaceAndPlace.bird = item.data.bird.url;
 		
 		facesAndPlaces.push(newFaceAndPlace);
 	});
-
-	loadFace();
-	loadPlace();
-	loadBird();
+	
+	console.log(facesAndPlaces);
+	
+	loadRandomFace();
+	loadRandomPlace();
+	loadRandomBird();
 	setState('ready');
 }
 
-function loadFace(){
-	imgFace = loadImage(facesAndPlaces[0].image.face, ()=>{
-		console.log("loaded face");
+function loadRandomFace(){
+	const i = int(random(0, facesAndPlaces.length));
+	imgFace = loadImage(facesAndPlaces[i].face, ()=>{
+		console.log("loaded random face");
 	});
 }
-function loadPlace(){
-	imgPlace = loadImage(facesAndPlaces[0].image.place, ()=>{
-		console.log("loaded place");
+function loadRandomPlace(){
+	const i = int(random(0, facesAndPlaces.length));
+	imgPlace = loadImage(facesAndPlaces[i].place, ()=>{
+		console.log("loaded random place");
+		loadRandomBgColor();
 	});
 }
-function loadBird(){
-	imgBird = loadImage(facesAndPlaces[0].image.bird, ()=>{
-		console.log("loaded bird");
+function loadRandomBird(){
+	const i = int(random(0, facesAndPlaces.length));
+	imgBird = loadImage(facesAndPlaces[i].bird, ()=>{
+		console.log("loaded random bird");
 	});
 }
+function loadRandomBgColor(){
+	const i = int(random(0, bgColors.length));
+	bgColor = color(bgColors[i]);
+	bgColor.setAlpha(200);
+	console.log("loaded random bg color");
+}
+
 
 //------------SETUP------------------------------------------------------------
 //------------SETUP------------------------------------------------------------
 //------------SETUP------------------------------------------------------------
+// let imgFaceBuffer;
 function setup() {
 	setState('loading');
-
+	
 	canvas = createCanvas(windowWidth, windowHeight);
 	canvas.position(0, 0);
+	
+	// console.log(imgFaceBuffer);
+
+	// imgFaceBuffer.createGraphics(400, 400);
+	// imgFaceBuffer.fill(255);
+	// imgFaceBuffer.stroke(0);
+	
 	setDisplayState();
 	textSize(100);
 	currentColor = color(255);
@@ -98,12 +116,12 @@ function setup() {
 
 function setInfoText(text) {
 	console.log(text);
-	document.getElementById('info').innerHTML = text;
+	// document.getElementById('info').innerHTML = text;
 }
 
 
 function setState(newState) {
-  if(newState != state){
+	if(newState != state){
 		state = newState;
 		
     if (state == 'loading') {
@@ -120,17 +138,17 @@ function setState(newState) {
 //------------UPDATE------------------------------------------------------------
 //------------UPDATE------------------------------------------------------------
 function update() {
-  // check orientation
+	// check orientation
   setDisplayState();
-
-
+	
+	
 }
 
 function setDisplayState() {
-  displayState.previousOrientation = displayState.currentOrientation;
-
+	displayState.previousOrientation = displayState.currentOrientation;
+	
 	if (windowWidth > windowHeight)
-    displayState.currentOrientation = 'landscape';
+	displayState.currentOrientation = 'landscape';
   else
     displayState.currentOrientation = 'portrait';
 }
@@ -149,34 +167,39 @@ function draw() {
 	resizeCanvas(windowWidth, windowHeight);
 	canvas.position(0, 0);
 	// background(0, 255, 0)
-	background(255);
-	fill(255);
+	background(255, 10);
+	fill(255, 10);
 	stroke(0);
 	
 	let size = min(width, height);
 	
 	if(imgPlace)
-	image(imgPlace, width/2 - size/2, height/2 - size/2, size, size);
+		image(imgPlace, width/2 - size/2, height/2 - size/2, size, size);
 	
 	blendMode(MULTIPLY);
 	
-	let bgColor = color(bgColors[0]);
-	bgColor.setAlpha(200);
-	background(bgColor);
+	// let bgColor = color(bgColors[0]);
+	if(bgColor){
+		bgColor.setAlpha(100);
+		background(bgColor);
+	}
 	blendMode(BLEND);
 	// background(bgColors[0], 0.5);
 	// background('rgba(255,0,0, 0.1)');
 	
 	// if(imgBird)
 	// 	image(imgBird, 0, 0, size, size);
-	push();
+	// push();
 	// translate(width/2 - size/2, height/2 - size/2);
-	translate(width/2 - size * 0.2, height - size * 0.8);
-	scale(0.7);
+	// translate(width/2 - size * 0.2, height - size * 0.8);
+	// translate(width/2 - size * 0.2, height - size * 0.8);
+	// scale(0.7);
+
+	let faceScale = 0.8
 
 	if(imgFace)
-		image(imgFace, 0, 0);
-	pop();
+		image(imgFace, 0, height-size * faceScale, size * faceScale, size * faceScale);
+	// pop();
 	
 	drawTouch();
 	if (state === 'loading')  background(255, 0, 0) ;
@@ -202,8 +225,26 @@ function go() {
   if (Tone.context.state != 'running') {
     console.log('starting tone.js');
     Tone.start();
-  }
+	}
+
+	if(imgFace){
+
+		let c = color(get(mouseX, mouseY));
+		( c._getLightness() >= 90.0 ) ? loadRandomFace() : loadRandomPlace();
+
+
+	}
 	isPressed = true;
+}
+
+function getColor() {
+	let foundColor = color(
+		...imgFace.get(
+			(mouseX - displayState.drawOffset.x) / maskImageScale / displayState.drawScale,
+			(mouseY - displayState.drawOffset.y) / maskImageScale / displayState.drawScale
+		)
+	);
+	return foundColor;
 }
 
 ///ON RELEASE
