@@ -11,14 +11,41 @@ let isPressed = false;
 //GET DYNAMIC DATA
 //------------------------------------------------------------------
 //CALL PRISMIC API
-getFromApi("sounds_exquisite", dataCallback); //returns to setKidstruments()
+getFromApi("faces_and_places", dataCallback); //returns to setKidstruments()
 
+const facesAndPlaces = [];
 //SET DYNAMIC DATA FROM PRISMIC
 function dataCallback(data) {
-	console.log('received ', data.length, ' results' );
+	// console.log('received ', data.length, ' results' );
 	// console.log(data);
+
+	const faceAndPlace = {
+		uid: null,
+		title: null,
+		author: null,
+		age: null,
+		postcode: null,
+		image: {
+			face: null,
+			place: null,
+			bird: null,
+		}
+
+	}
+
 	data.forEach((item) => {
-		// console.log(item);
+		let newFaceAndPlace = {...faceAndPlace};
+
+		newFaceAndPlace.uid = item.uid;
+		newFaceAndPlace.title = 	item.data.title[0].text;
+		newFaceAndPlace.author = 	item.data.name[0].text;
+		newFaceAndPlace.postcode  = 	item.data.postcode;
+		newFaceAndPlace.age = item.data.age;
+		newFaceAndPlace.image.face = item.data.face_image.url;
+		newFaceAndPlace.image.place = item.data.place_image.url;
+		newFaceAndPlace.image.bird = item.data.bird.url;
+		
+		facesAndPlaces.push(newFaceAndPlace);
 	});
 
 	setState('ready');
