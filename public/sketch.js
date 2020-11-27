@@ -5,19 +5,21 @@ let displayState = {
 };
 let isPressed = false;
 
+let imgFaceBuffer;
 let imgFace;
 let imgPlace;
 let imgBird;
 let bgColor = null;
 const bgColors = [
-	'#fccd79',
-	'#1a74b6',
-	'#f2706c',
-	'#62af72',
-	'#81d2e4',
-	'#f06e92'
+	'#67658c',
+	'#e76a54',
+	'#76987d',
+	'#ffc65d',
+	'#5298a4',
+	'#89c9d2',
 ];
 
+let imgPaper = null;
 
 //------------------------------------------------------------------
 //GET DYNAMIC DATA
@@ -58,7 +60,7 @@ function dataCallback(data) {
 	});
 	
 	console.log(facesAndPlaces);
-	
+
 	loadRandomFace();
 	loadRandomPlace();
 	loadRandomBird();
@@ -69,6 +71,7 @@ function loadRandomFace(){
 	const i = int(random(0, facesAndPlaces.length));
 	imgFace = loadImage(facesAndPlaces[i].face, ()=>{
 		console.log("loaded random face");
+		drawFaceToBuffer();
 	});
 }
 function loadRandomPlace(){
@@ -90,6 +93,27 @@ function loadRandomBgColor(){
 	bgColor.setAlpha(200);
 	console.log("loaded random bg color");
 }
+function drawFaceToBuffer(){
+	imgFaceBuffer = createGraphics(windowWidth, windowHeight);
+	imgFaceBuffer.fill(255);
+	imgFaceBuffer.stroke(0);
+
+	let size = min(width, height);
+	let faceScale = 0.8;
+	if(imgFaceBuffer){
+		imgFaceBuffer.clear();
+		imgFaceBuffer.push();
+		imgFaceBuffer.translate(imgFace.width/2, imgFace.height/2,);
+		imgFaceBuffer.rotate(random(-0.0005, 0.0005));
+		imgFaceBuffer.translate(-imgFace.width/2, -imgFace.height/2,);
+
+		imgFaceBuffer.translate(0, height-size * faceScale);
+		imgFaceBuffer.translate(random(1.0), random(1.0));
+		imgFaceBuffer.image(imgFace, 0, 0,  size * faceScale,  size * faceScale);
+		imgFaceBuffer.pop();
+		console.log('face drawn to buffer');
+	}
+}
 
 
 //------------SETUP------------------------------------------------------------
@@ -103,11 +127,11 @@ function setup() {
 	canvas.position(0, 0);
 	frameRate(4);
 	
-	// console.log(imgFaceBuffer);
+	imgPaper = loadImage('./assets/paper.jpg');
+	imgFaceBuffer = createGraphics(windowWidth, windowHeight);
+	imgFaceBuffer.fill(255);
+	imgFaceBuffer.stroke(0);
 
-	// imgFaceBuffer.createGraphics(400, 400);
-	// imgFaceBuffer.fill(255);
-	// imgFaceBuffer.stroke(0);
 	
 	setDisplayState();
 	textSize(100);
@@ -157,7 +181,7 @@ function setDisplayState() {
 
 function windowResized(){
 	resizeCanvas(windowWidth, windowHeight);
-	
+	drawFaceToBuffer();
 }
 
 //------------DRAW------------------------------------------------------------
@@ -176,10 +200,22 @@ function draw() {
 	fill(255);
 	stroke(0);
 	
+	let size = max(width, height);
+	if(imgPaper){
+		push();
+		translate(imgPaper.width/2, imgPaper.height/2,);
+		rotate(random(-0.0005, 0.0005));
+		translate(-imgPaper.width/2, -imgPaper.height/2,);
+		translate(width/2 - size/2, height/2 - size/2);
+		translate(random(1.0), random(1.0));
+		image(imgPaper, 0, 0, size, size);
+		pop();
+		// console.log('yo');
+	}
 	
-	let size = min(width, height);
 	
-
+	size = min(width, height);
+	
 	if(imgPlace){
 		push();
 		translate(imgPlace.width/2, imgPlace.height/2,);
@@ -209,22 +245,22 @@ function draw() {
 	// translate(width/2 - size * 0.2, height - size * 0.8);
 	// translate(width/2 - size * 0.2, height - size * 0.8);
 	// scale(0.7);
-
+	
+	// size = min(width, height);
 	fill(255);
-	let faceScale = 0.8
-	if(imgFace){
-		push();
-		translate(imgFace.width/2, imgFace.height/2,);
-		rotate(random(-0.0005, 0.0005));
-		translate(-imgFace.width/2, -imgFace.height/2,);
+	let faceScale = 0.8;
+	// if(imgFace){
+	// 	push();
+	// 	translate(imgFace.width/2, imgFace.height/2,);
+	// 	rotate(random(-0.0005, 0.0005));
+	// 	translate(-imgFace.width/2, -imgFace.height/2,);
 
-		translate(0, height-size * faceScale);
-		translate(random(1.0), random(1.0));
-		image(imgFace, 0, 0,  size * faceScale,  size * faceScale);
-		pop();
-		// image(imgFace, 0, height-size * faceScale, size * faceScale, size * faceScale);
-	}
-	// pop();
+	// 	translate(0, height-size * faceScale);
+	// 	translate(random(1.0), random(1.0));
+	// 	image(imgFace, 0, 0,  size * faceScale,  size * faceScale);
+	// 	pop();
+	// }
+	image(imgFaceBuffer, 0, 0);
 	
 	drawTouch();
 	if (state === 'loading')  background(0, 0, 0, 50) ;
@@ -252,12 +288,9 @@ function go() {
     Tone.start();
 	}
 
-	if(imgFace){
-
-		let c = color(get(mouseX, mouseY));
-		( c._getLightness() >= 90.0 ) ? loadRandomFace() : loadRandomPlace();
-
-
+	if(imgFaceBuffer){
+		let c = color(imgFaceBuffer.get(mouseX, mouseY));
+		( c._getAlpha() >= 90.0 ) ? loadRandomFace() : loadRandomPlace();
 	}
 	isPressed = true;
 }
