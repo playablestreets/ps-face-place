@@ -249,18 +249,18 @@ function draw() {
 	// size = min(width, height);
 	fill(255);
 	let faceScale = 0.8;
-	// if(imgFace){
-	// 	push();
-	// 	translate(imgFace.width/2, imgFace.height/2,);
-	// 	rotate(random(-0.0005, 0.0005));
-	// 	translate(-imgFace.width/2, -imgFace.height/2,);
+	if(imgFace){
+		push();
+		translate(imgFace.width/2, imgFace.height/2,);
+		rotate(random(-0.0005, 0.0005));
+		translate(-imgFace.width/2, -imgFace.height/2,);
 
-	// 	translate(0, height-size * faceScale);
-	// 	translate(random(1.0), random(1.0));
-	// 	image(imgFace, 0, 0,  size * faceScale,  size * faceScale);
-	// 	pop();
-	// }
-	image(imgFaceBuffer, 0, 0);
+		translate(0, height-size * faceScale);
+		translate(random(1.0), random(1.0));
+		image(imgFace, 0, 0,  size * faceScale,  size * faceScale);
+		pop();
+	}
+	// image(imgFaceBuffer, 0, 0);
 	
 	drawTouch();
 	if (state === 'loading')  background(0, 0, 0, 50) ;
@@ -282,6 +282,7 @@ function drawTouch() {
 //------------INTERACTION------------------------------------------------------------
 //------------INTERACTION------------------------------------------------------------
 ///ONTOUCH
+//todo : this is getting called twice on mouseclicks
 function go() {
   if (Tone.context.state != 'running') {
     console.log('starting tone.js');
@@ -295,15 +296,6 @@ function go() {
 	isPressed = true;
 }
 
-// function getColor() {
-// 	let foundColor = color(
-// 		...imgFace.get(
-// 			(mouseX - displayState.drawOffset.x) / maskImageScale / displayState.drawScale,
-// 			(mouseY - displayState.drawOffset.y) / maskImageScale / displayState.drawScale
-// 		)
-// 	);
-// 	return foundColor;
-// }
 
 ///ON RELEASE
 function stop() {
