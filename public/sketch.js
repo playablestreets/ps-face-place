@@ -72,6 +72,7 @@ function loadRandomFace(){
 	imgFace = loadImage(facesAndPlaces[i].face, ()=>{
 		console.log("loaded random face");
 		drawFaceToBuffer();
+		redraw();
 	});
 }
 function loadRandomPlace(){
@@ -79,12 +80,14 @@ function loadRandomPlace(){
 	imgPlace = loadImage(facesAndPlaces[i].place, ()=>{
 		console.log("loaded random place");
 		loadRandomBgColor();
+		redraw();
 	});
 }
 function loadRandomBird(){
 	const i = int(random(0, facesAndPlaces.length));
 	imgBird = loadImage(facesAndPlaces[i].bird, ()=>{
 		console.log("loaded random bird");
+		redraw();
 	});
 }
 function loadRandomBgColor(){
@@ -92,6 +95,7 @@ function loadRandomBgColor(){
 	bgColor = color(bgColors[i]);
 	bgColor.setAlpha(200);
 	console.log("loaded random bg color");
+	redraw();
 }
 function drawFaceToBuffer(){
 	imgFaceBuffer = createGraphics(windowWidth, windowHeight);
@@ -294,12 +298,14 @@ function go() {
 		( c._getAlpha() >= 90.0 ) ? loadRandomFace() : loadRandomPlace();
 	}
 	isPressed = true;
+	redraw();
 }
 
 
 ///ON RELEASE
 function stop() {
-  isPressed = false;
+	isPressed = false;
+	redraw();
 }
 
 //fuse touches and mouse clicks
