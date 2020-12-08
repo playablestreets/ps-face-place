@@ -98,27 +98,28 @@ function loadRandomBgColor(){
 	console.log("loaded random bg color");
 	redraw();
 }
-function drawFaceToBuffer(){
-	imgFaceBuffer = createGraphics(windowWidth, windowHeight);
-	imgFaceBuffer.fill(255);
-	imgFaceBuffer.stroke(0);
+// function drawFaceToBuffer(){
+// 	imgFaceBuffer = createGraphics(windowWidth, windowHeight);
+// 	imgFaceBuffer.fill(255);
+// 	imgFaceBuffer.stroke(0);
 
-	let size = min(width, height);
-	let faceScale = 0.8;
-	if(imgFaceBuffer){
-		imgFaceBuffer.clear();
-		imgFaceBuffer.push();
-		imgFaceBuffer.translate(imgFace.width/2, imgFace.height/2,);
-		imgFaceBuffer.rotate(random(-0.0005, 0.0005));
-		imgFaceBuffer.translate(-imgFace.width/2, -imgFace.height/2,);
+// 	let size = min(width, height);
+// 	let faceScale = 0.8;
+// 	if(imgFaceBuffer){
+// 		imgFaceBuffer.clear();
+// 		imgFaceBuffer.push();
+// 		imgFaceBuffer.translate(imgFace.width/2, imgFace.height/2,);
+// 		imgFaceBuffer.rotate(random(-0.0005, 0.0005));
+// 		imgFaceBuffer.translate(-imgFace.width/2, -imgFace.height/2,);
 
-		imgFaceBuffer.translate(0, height-size * faceScale);
-		imgFaceBuffer.translate(random(1.0), random(1.0));
-		imgFaceBuffer.image(imgFace, 0, 0,  size * faceScale,  size * faceScale);
-		imgFaceBuffer.pop();
-		console.log('face drawn to buffer');
-	}
-}
+// 		imgFaceBuffer.translate(0, height-size * faceScale);
+// 		imgFaceBuffer.translate(random(1.0), random(1.0));
+// 		imgFaceBuffer.image(imgFace, 0, 0,  size * faceScale,  size * faceScale);
+// 		imgFaceBuffer.pop();
+// 		console.log('face drawn to buffer');
+// 	}
+// }
+
 function drawToPolaroidBuffer(){
 	let size = min(width, height);
 	polaroidBuffer = createGraphics(size, size);
@@ -127,14 +128,57 @@ function drawToPolaroidBuffer(){
 
 
 	// let size = min(width, height);
-	let margin = size * 0.2;
+	let margin = size * 0.1;
 	// size = size - 2 * margin;
 
 	polaroidBuffer.push();
 	polaroidBuffer.background(255);
-	polaroidBuffer.fill(0);
+	// polaroidBuffer.fill(100);
 	polaroidBuffer.noStroke();
-	polaroidBuffer.rect(margin, margin, size-2*margin, size-2*margin);
+	
+	// size = min(width, height);
+	
+	if(imgPlace){
+		push();
+		// polaroidBuffer.fill(bgColor);
+		polaroidBuffer.fill(255);
+		// polaroidBuffer.translate(imgPlace.width/2, imgPlace.height/2,);
+		// polaroidBuffer.rotate(random(-0.0005, 0.0005));
+		// polaroidBuffer.translate(-imgPlace.width/2, -imgPlace.height/2,);
+		// polaroidBuffer.translate(width/2 - size/2, height/2 - size/2);
+		// polaroidBuffer.translate(random(1.0), random(1.0));
+		polaroidBuffer.image(imgPlace, margin, margin*0.5, size-2*margin, size-2*margin);
+		
+		blendMode(MULTIPLY);
+	
+		// let bgColor = color(bgColors[0]);
+		if(bgColor){
+			bgColor.setAlpha(100);
+			polaroidBuffer.fill(bgColor);
+			polaroidBuffer.rect(margin, margin*0.5, size-2*margin, size-2*margin);
+		}
+		blendMode(BLEND);
+		pop();
+	}
+
+	size = min(width, height);
+	fill(255);
+	let faceScale = 0.6;
+	if(imgFace){
+		polaroidBuffer.push();
+		// translate(imgFace.width/2, imgFace.height/2,);
+		// rotate(random(-0.0005, 0.0005));
+		// translate(-imgFace.width/2, -imgFace.height/2,);
+
+		// translate(0, height-size * faceScale);
+		// translate(random(1.0), random(1.0));
+		polaroidBuffer.image(imgFace, 0, size - size * faceScale - margin * 1.5,  size * faceScale,  size * faceScale);
+		polaroidBuffer.pop();
+	}
+
+	polaroidBuffer.fill(255);
+	polaroidBuffer.rect(0,0,margin,height); 
+
 	polaroidBuffer.pop();
 }
 
@@ -154,6 +198,9 @@ function setup() {
 	imgFaceBuffer = createGraphics(windowWidth, windowHeight);
 	imgFaceBuffer.fill(255);
 	imgFaceBuffer.stroke(0);
+
+	loadRandomBgColor();
+
 	drawToPolaroidBuffer();
 	
 	setDisplayState();
@@ -225,40 +272,22 @@ function draw() {
 	stroke(0);
 	
 	let size = max(width, height);
-	// if(imgPaper){
-	// 	push();
-	// 	translate(imgPaper.width/2, imgPaper.height/2,);
-	// 	rotate(random(-0.0005, 0.0005));
-	// 	translate(-imgPaper.width/2, -imgPaper.height/2,);
-	// 	translate(width/2 - size/2, height/2 - size/2);
-	// 	translate(random(1.0), random(1.0));
-	// 	image(imgPaper, 0, 0, size, size);
-	// 	pop();
-	// 	// console.log('yo');
-	// }
-	
-	
-	size = min(width, height);
-	
-	if(imgPlace){
+	if(imgPaper){
 		push();
-		translate(imgPlace.width/2, imgPlace.height/2,);
+		translate(imgPaper.width/2, imgPaper.height/2,);
 		rotate(random(-0.0005, 0.0005));
-		translate(-imgPlace.width/2, -imgPlace.height/2,);
+		translate(-imgPaper.width/2, -imgPaper.height/2,);
 		translate(width/2 - size/2, height/2 - size/2);
 		translate(random(1.0), random(1.0));
-		image(imgPlace, 0, 0, size, size);
+		image(imgPaper, 0, 0, size, size);
 		pop();
+		// console.log('yo');
 	}
 	
-	blendMode(MULTIPLY);
 	
-	// let bgColor = color(bgColors[0]);
-	if(bgColor){
-		bgColor.setAlpha(100);
-		background(bgColor);
-	}
-	blendMode(BLEND);
+
+	
+
 	// background(bgColors[0], 0.5);
 	// background('rgba(255,0,0, 0.1)');
 	
@@ -270,21 +299,9 @@ function draw() {
 	// translate(width/2 - size * 0.2, height - size * 0.8);
 	// scale(0.7);
 	
-	// size = min(width, height);
-	fill(255);
-	let faceScale = 0.8;
-	if(imgFace){
-		push();
-		translate(imgFace.width/2, imgFace.height/2,);
-		rotate(random(-0.0005, 0.0005));
-		translate(-imgFace.width/2, -imgFace.height/2,);
 
-		translate(0, height-size * faceScale);
-		translate(random(1.0), random(1.0));
-		image(imgFace, 0, 0,  size * faceScale,  size * faceScale);
-		pop();
-	}
 	// image(imgFaceBuffer, 0, 0);
+	drawToPolaroidBuffer();
 	drawPolaroid();
 	// drawPolaroidFrame();
 	
@@ -293,16 +310,6 @@ function draw() {
 }
 
 
-// function drawPolaroidFrame(){
-	// 	let imgSize = min(width, height)*0.6;
-	// 	let borderSize = max(width,height)/2 - imgSize;
-	// 	push();
-	// 	fill(255,0,0);
-	// 	noStroke();
-	// 	rect(0, 0, borderSize, height);
-	// 	rect(width, 0, -borderSize, height);
-	// 	pop();
-	// }
 	
 function drawPolaroid(){
 	if(width > height){
@@ -339,11 +346,7 @@ function go() {
 	}
 
 	if(!isPressed){
-
-		if(imgFaceBuffer){
-			let c = color(imgFaceBuffer.get(mouseX, mouseY));
-			( c._getAlpha() >= 90.0 ) ? loadRandomFace() : loadRandomPlace();
-		}
+		(mouseX < width/2 && mouseY > height/2) ? loadRandomFace() : loadRandomPlace();
 		isPressed = true;
 	}
 
