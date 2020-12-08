@@ -5,6 +5,7 @@ let displayState = {
 };
 let isPressed = false;
 
+// let polaroidBuffer;
 let imgFaceBuffer;
 let imgFace;
 let imgPlace;
@@ -118,12 +119,30 @@ function drawFaceToBuffer(){
 		console.log('face drawn to buffer');
 	}
 }
+function drawToPolaroidBuffer(){
+	let size = min(width, height);
+	polaroidBuffer = createGraphics(size, size);
+	polaroidBuffer.fill(255);
+	polaroidBuffer.stroke(0);
+
+
+	// let size = min(width, height);
+	let margin = size * 0.2;
+	// size = size - 2 * margin;
+
+	polaroidBuffer.push();
+	polaroidBuffer.background(255);
+	polaroidBuffer.fill(0);
+	polaroidBuffer.noStroke();
+	polaroidBuffer.rect(margin, margin, size-2*margin, size-2*margin);
+	polaroidBuffer.pop();
+}
 
 
 //------------SETUP------------------------------------------------------------
 //------------SETUP------------------------------------------------------------
 //------------SETUP------------------------------------------------------------
-// let imgFaceBuffer;
+// let polaroidBuffer;
 function setup() {
 	setState('loading');
 	
@@ -135,7 +154,7 @@ function setup() {
 	imgFaceBuffer = createGraphics(windowWidth, windowHeight);
 	imgFaceBuffer.fill(255);
 	imgFaceBuffer.stroke(0);
-
+	drawToPolaroidBuffer();
 	
 	setDisplayState();
 	textSize(100);
@@ -186,6 +205,7 @@ function setDisplayState() {
 function windowResized(){
 	resizeCanvas(windowWidth, windowHeight);
 	drawFaceToBuffer();
+	drawToPolaroidBuffer();
 }
 
 //------------DRAW------------------------------------------------------------
@@ -205,17 +225,17 @@ function draw() {
 	stroke(0);
 	
 	let size = max(width, height);
-	if(imgPaper){
-		push();
-		translate(imgPaper.width/2, imgPaper.height/2,);
-		rotate(random(-0.0005, 0.0005));
-		translate(-imgPaper.width/2, -imgPaper.height/2,);
-		translate(width/2 - size/2, height/2 - size/2);
-		translate(random(1.0), random(1.0));
-		image(imgPaper, 0, 0, size, size);
-		pop();
-		// console.log('yo');
-	}
+	// if(imgPaper){
+	// 	push();
+	// 	translate(imgPaper.width/2, imgPaper.height/2,);
+	// 	rotate(random(-0.0005, 0.0005));
+	// 	translate(-imgPaper.width/2, -imgPaper.height/2,);
+	// 	translate(width/2 - size/2, height/2 - size/2);
+	// 	translate(random(1.0), random(1.0));
+	// 	image(imgPaper, 0, 0, size, size);
+	// 	pop();
+	// 	// console.log('yo');
+	// }
 	
 	
 	size = min(width, height);
@@ -265,11 +285,34 @@ function draw() {
 		pop();
 	}
 	// image(imgFaceBuffer, 0, 0);
+	drawPolaroid();
+	// drawPolaroidFrame();
 	
 	drawTouch();
 	if (state === 'loading')  background(0, 0, 0, 50) ;
 }
 
+
+// function drawPolaroidFrame(){
+	// 	let imgSize = min(width, height)*0.6;
+	// 	let borderSize = max(width,height)/2 - imgSize;
+	// 	push();
+	// 	fill(255,0,0);
+	// 	noStroke();
+	// 	rect(0, 0, borderSize, height);
+	// 	rect(width, 0, -borderSize, height);
+	// 	pop();
+	// }
+	
+function drawPolaroid(){
+	if(width > height){
+		image(polaroidBuffer, width/2-polaroidBuffer.width/2, 0,  polaroidBuffer.width,  polaroidBuffer.height);
+		
+	}else{
+		image(polaroidBuffer,  0, height/2-polaroidBuffer.height/2,  polaroidBuffer.width,  polaroidBuffer.height);
+	}
+
+}
 
 function drawTouch() {
 	if (mouseX > 10 && mouseX < width - 10 && (mouseY > 10 && mouseY < height - 10)) {
@@ -288,16 +331,22 @@ function drawTouch() {
 ///ONTOUCH
 //todo : this is getting called twice on mouseclicks
 function go() {
+
+
   if (Tone.context.state != 'running') {
     console.log('starting tone.js');
     Tone.start();
 	}
 
-	if(imgFaceBuffer){
-		let c = color(imgFaceBuffer.get(mouseX, mouseY));
-		( c._getAlpha() >= 90.0 ) ? loadRandomFace() : loadRandomPlace();
+	if(!isPressed){
+
+		if(imgFaceBuffer){
+			let c = color(imgFaceBuffer.get(mouseX, mouseY));
+			( c._getAlpha() >= 90.0 ) ? loadRandomFace() : loadRandomPlace();
+		}
+		isPressed = true;
 	}
-	isPressed = true;
+
 	redraw();
 }
 
@@ -305,20 +354,24 @@ function go() {
 ///ON RELEASE
 function stop() {
 	isPressed = false;
-	redraw();
+	// redraw();
 }
 
 //fuse touches and mouse clicks
 function mousePressed() {
+	console.log('mouse down');
 	go();
 }
 function touchStarted() {
+	console.log('touch down');
 	go();
 }
 function mouseReleased() {
+	console.log('mouse released');
 	stop();
 }
 function touchEnded() {
+	console.log('touch released');
 	stop();
 }
 
