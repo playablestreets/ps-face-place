@@ -72,7 +72,7 @@ function loadRandomFace(){
 	const i = int(random(0, facesAndPlaces.length));
 	imgFace = loadImage(facesAndPlaces[i].face, ()=>{
 		console.log("loaded random face");
-		drawFaceToBuffer();
+		drawToPolaroidBuffer();
 		redraw();
 	});
 }
@@ -81,6 +81,7 @@ function loadRandomPlace(){
 	imgPlace = loadImage(facesAndPlaces[i].place, ()=>{
 		console.log("loaded random place");
 		loadRandomBgColor();
+		drawToPolaroidBuffer();
 		redraw();
 	});
 }
@@ -195,9 +196,6 @@ function setup() {
 	frameRate(4);
 	
 	imgPaper = loadImage('./assets/paper.jpg');
-	imgFaceBuffer = createGraphics(windowWidth, windowHeight);
-	imgFaceBuffer.fill(255);
-	imgFaceBuffer.stroke(0);
 
 	loadRandomBgColor();
 
@@ -235,8 +233,6 @@ function setState(newState) {
 function update() {
 	// check orientation
   setDisplayState();
-	
-	
 }
 
 function setDisplayState() {
@@ -251,7 +247,6 @@ function setDisplayState() {
 
 function windowResized(){
 	resizeCanvas(windowWidth, windowHeight);
-	drawFaceToBuffer();
 	drawToPolaroidBuffer();
 }
 
@@ -301,7 +296,7 @@ function draw() {
 	
 
 	// image(imgFaceBuffer, 0, 0);
-	drawToPolaroidBuffer();
+	// drawToPolaroidBuffer();
 	drawPolaroid();
 	// drawPolaroidFrame();
 	
