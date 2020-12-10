@@ -69,18 +69,9 @@ function dataCallback(data) {
 	
 	
 	let urlName = getUrlName();
-	// if (urlName != '') {
-		// 	for (let index = 0; index < instruments.length; index++) {
-			// 		if (instruments[index].uid.toLowerCase() == urlName) {
-				// 			currentInstrument = index;
-				// 			console.log('loading ' + instruments[currentInstrument].uid);
-				// 			break;
-				// 		}
-				// 	}
-				// }
 				
 	console.log('url name:', urlName);
-	let foundIndex = 0;
+	let foundIndex = int(random(0, facesAndPlaces.length));
 	if (urlName != '') {
 		for (let index = 0; index < facesAndPlaces.length; index++) {
 			if (facesAndPlaces[index].uid.toLowerCase() == urlName) {
@@ -100,15 +91,6 @@ function dataCallback(data) {
 }
 
 function loadFace(i){
-	// console.log('INDEX:', index);
-
-	// let i = int(random(0, facesAndPlaces.length));
-	// if(index)
-		// i = index;
-
-	// console.log('i:', i);
-
-
 	imgFace = loadImage(facesAndPlaces[i].face, ()=>{
 		console.log("loaded random face");
 
@@ -147,13 +129,7 @@ function loadBird(i){
 }
 function loadRandomBgColor(){
 	const i = int(random(0, bgColors.length));
-	let newColor = color(bgColors[i]);
-	// colorMode(HSB);
-	// bgColor = color(hue(newColor), saturation(newColor), brightness(newColor));
-	bgColor = newColor;
-	// bgColor = color('rgb(103,101,140)');
-	// bgColor.setAlpha(200);
-	// colorMode(RGB);
+	bgColor = color(bgColors[i]);
 	console.log("loaded random bg color");
 	redraw();
 }
