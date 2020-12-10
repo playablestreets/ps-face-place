@@ -136,16 +136,17 @@ function drawToPolaroidBuffer(){
 	
 	if(imgPlace){
 		push();
-		polaroidBuffer.fill(255);
-		polaroidBuffer.image(imgPlace, margin, margin*0.5, size-2*margin, size-2*margin);
 		
 		if(bgColor){
-			blendMode(BURN);
-			bgColor.setAlpha(210);
+			// blendMode(BURN);
+			// bgColor.setAlpha(210);
 			polaroidBuffer.fill(bgColor);
 			polaroidBuffer.rect(margin, margin*0.5, size-2*margin, size-2*margin);
-			blendMode(BLEND);
+			// blendMode(BLEND);
 		}
+		polaroidBuffer.fill(255);
+		// polaroidBuffer.image(imgPlace, margin, margin*0.5, size-2*margin, size-2*margin);
+		polaroidBuffer.blend(imgPlace, margin, margin*0.5, size-2*margin, size-2*margin,  margin, margin*0.5, size-2*margin, size-2*margin, MULTIPLY);
 		pop();
 	}
 
@@ -221,7 +222,7 @@ function setState(newState) {
 function update() {
 	// check orientation
 	setDisplayState();
-	if(millis() - developTime < developDuration ){
+	if(millis() - developTime <= developDuration ){
 		drawToPolaroidBuffer();
 	}
 
@@ -239,7 +240,7 @@ function setDisplayState() {
 
 function windowResized(){
 	resizeCanvas(windowWidth, windowHeight);
-	drawToPolaroidBuffer();
+	// drawToPolaroidBuffer();
 }
 
 //------------DRAW------------------------------------------------------------
