@@ -25,7 +25,7 @@ const bgColors = [
 let imgPaper = null;
 let flashTime;
 let developTime;
-let developDuration = 5000;
+let developDuration = 3000;
 
 //------------------------------------------------------------------
 //GET DYNAMIC DATA
@@ -300,13 +300,22 @@ function draw() {
 
 	
 function drawPolaroid(){
+	push();
+	translate(width/2, height/2);
+	scale(0.9);
+	translate(-width/2, -height/2);
 	if(width > height){
+		push();
+		noStroke();
+		fill(50,50);
+		translate(5,5);
+		rect(width/2-polaroidBuffer.width/2, 0,  polaroidBuffer.width,  polaroidBuffer.height, 5);
+		pop();
 		image(polaroidBuffer, width/2-polaroidBuffer.width/2, 0,  polaroidBuffer.width,  polaroidBuffer.height);
-		
 	}else{
 		image(polaroidBuffer,  0, height/2-polaroidBuffer.height/2,  polaroidBuffer.width,  polaroidBuffer.height);
 	}
-
+	pop();
 }
 
 function drawTouch() {
