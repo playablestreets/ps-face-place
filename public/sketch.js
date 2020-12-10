@@ -11,14 +11,18 @@ let imgFace;
 let imgPlace;
 let imgBird;
 let bgColor = null;
+
 const bgColors = [
-	'#67658c',
+	'#4D48A9',
 	'#e76a54',
 	'#76987d',
 	'#ffc65d',
 	'#5298a4',
 	'#89c9d2',
 ];
+
+
+
 
 let imgPaper = null;
 let flashTime;
@@ -107,8 +111,13 @@ function loadRandomBird(){
 }
 function loadRandomBgColor(){
 	const i = int(random(0, bgColors.length));
-	bgColor = color(bgColors[i]);
-	bgColor.setAlpha(200);
+	// let newColor = color(bgColors[i]);
+	// colorMode(HSB);
+	// bgColor = color(hue(newColor), saturation(newColor), brightness(newColor));
+	// bgColor = newColor;
+	bgColor = color('rgb(103,101,140)');
+	// bgColor.setAlpha(200);
+	// colorMode(RGB);
 	console.log("loaded random bg color");
 	redraw();
 }
@@ -132,13 +141,13 @@ function drawToPolaroidBuffer(){
 		polaroidBuffer.fill(255);
 		polaroidBuffer.image(imgPlace, margin, margin*0.5, size-2*margin, size-2*margin);
 		
-		blendMode(MULTIPLY);
 		if(bgColor){
-			bgColor.setAlpha(100);
+			blendMode(MULTIPLY);
+			bgColor.setAlpha(210);
 			polaroidBuffer.fill(bgColor);
 			polaroidBuffer.rect(margin, margin*0.5, size-2*margin, size-2*margin);
+			blendMode(BLEND);
 		}
-		blendMode(BLEND);
 		pop();
 	}
 
