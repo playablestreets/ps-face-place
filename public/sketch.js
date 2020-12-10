@@ -145,8 +145,7 @@ function drawToPolaroidBuffer(){
 			// blendMode(BLEND);
 		}
 		polaroidBuffer.fill(255);
-		// polaroidBuffer.image(imgPlace, margin, margin*0.5, size-2*margin, size-2*margin);
-		polaroidBuffer.blend(imgPlace, margin, margin*0.5, size-2*margin, size-2*margin,  margin, margin*0.5, size-2*margin, size-2*margin, MULTIPLY);
+		polaroidBuffer.blend(imgPlace, 0, 0, imgPlace.width, imgPlace.height,  margin, margin*0.5, size-2*margin, size-2*margin, MULTIPLY);
 		pop();
 	}
 
