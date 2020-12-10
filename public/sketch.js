@@ -72,7 +72,7 @@ function dataCallback(data) {
 	let urlName = getUrlName();
 				
 	console.log('url name:', urlName);
-	let foundIndex = int(random(0, facesAndPlaces.length));
+	let foundIndex;
 	if (urlName != '') {
 		for (let index = 0; index < facesAndPlaces.length; index++) {
 			if (facesAndPlaces[index].uid.toLowerCase() == urlName) {
@@ -83,11 +83,19 @@ function dataCallback(data) {
 		}
 	}
 	
-	console.log('found index = ', foundIndex);
-	
-	loadFace(foundIndex);
-	loadPlace(foundIndex);
-	loadBird(foundIndex);
+
+	if(foundIndex){
+		loadFace(foundIndex);
+		loadPlace(foundIndex);
+		loadBird(foundIndex);
+	}else{
+		foundIndex = int(random(0, facesAndPlaces.length));
+		loadFace(foundIndex);
+		foundIndex = int(random(0, facesAndPlaces.length));
+		loadPlace(foundIndex);
+		foundIndex = int(random(0, facesAndPlaces.length));
+		loadBird(foundIndex);
+	}
 	setState('ready');
 }
 
@@ -236,6 +244,11 @@ function setState(newState) {
 function update() {
 	// check orientation
 	setDisplayState();
+
+	//if we have rotated, reload the page
+	if (displayState.currentOrientation != displayState.previousOrientation)
+		reloadPage();
+
 	if(millis() - developTime <= developDuration ){
 		drawToPolaroidBuffer();
 	}
@@ -380,9 +393,10 @@ function go() {
 	}
 
 	if(!isPressed){
-		drawToPolaroidBuffer();
-		let i = int(random(0, facesAndPlaces.length));
-		(mouseX < width/2 && mouseY > height/2) ? loadFace(i) : loadPlace(i);
+		reloadPage();
+		// drawToPolaroidBuffer();
+		// let i = int(random(0, facesAndPlaces.length));
+		// (mouseX < width/2 && mouseY > height/2) ? loadFace(i) : loadPlace(i);
 		isPressed = true;
 	}
 
@@ -414,6 +428,15 @@ function touchEnded() {
 	stop();
 }
 
+
+function reloadPage(){
+	let addr = window.location.href;
+  // let dest = addr.split('?')[0] + '?' + currentSlug;
+  let dest = addr;
+  // console.log(dest);
+  location.replace(dest); //do this instead, naviagting to current instrument
+
+}
 
 // document.getElementById('button-next').onclick = loadNext;
 // document.getElementById('button-prev').onclick = loadPrev;
