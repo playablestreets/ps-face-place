@@ -66,15 +66,49 @@ function dataCallback(data) {
 	});
 	
 	console.log(facesAndPlaces);
-
-	loadRandomFace();
-	loadRandomPlace();
-	loadRandomBird();
+	
+	
+	let urlName = getUrlName();
+	// if (urlName != '') {
+		// 	for (let index = 0; index < instruments.length; index++) {
+			// 		if (instruments[index].uid.toLowerCase() == urlName) {
+				// 			currentInstrument = index;
+				// 			console.log('loading ' + instruments[currentInstrument].uid);
+				// 			break;
+				// 		}
+				// 	}
+				// }
+				
+	console.log('url name:', urlName);
+	let foundIndex = 0;
+	if (urlName != '') {
+		for (let index = 0; index < facesAndPlaces.length; index++) {
+			if (facesAndPlaces[index].uid.toLowerCase() == urlName) {
+				foundIndex = index;
+				console.log('loading ' + facesAndPlaces[foundIndex].uid);
+				break;
+			}
+		}
+	}
+	
+	console.log('found index = ', foundIndex);
+	
+	loadFace(foundIndex);
+	loadPlace(foundIndex);
+	loadBird(foundIndex);
 	setState('ready');
 }
 
-function loadRandomFace(){
-	const i = int(random(0, facesAndPlaces.length));
+function loadFace(i){
+	// console.log('INDEX:', index);
+
+	// let i = int(random(0, facesAndPlaces.length));
+	// if(index)
+		// i = index;
+
+	// console.log('i:', i);
+
+
 	imgFace = loadImage(facesAndPlaces[i].face, ()=>{
 		console.log("loaded random face");
 
@@ -86,8 +120,10 @@ function loadRandomFace(){
 		redraw();
 	});
 }
-function loadRandomPlace(){
-	const i = int(random(0, facesAndPlaces.length));
+
+function loadPlace(i){
+	// const i = index || int(random(0, facesAndPlaces.length));
+	// console.log('found index = ', i);
 	imgPlace = loadImage(facesAndPlaces[i].place, ()=>{
 		console.log("loaded random place");
 		loadRandomBgColor();
@@ -100,8 +136,10 @@ function loadRandomPlace(){
 		redraw();
 	});
 }
-function loadRandomBird(){
-	const i = int(random(0, facesAndPlaces.length));
+
+function loadBird(i){
+	// const i = index || int(random(0, facesAndPlaces.length));
+
 	imgBird = loadImage(facesAndPlaces[i].bird, ()=>{
 		console.log("loaded random bird");
 		redraw();
@@ -363,7 +401,8 @@ function go() {
 
 	if(!isPressed){
 		drawToPolaroidBuffer();
-		(mouseX < width/2 && mouseY > height/2) ? loadRandomFace() : loadRandomPlace();
+		let i = int(random(0, facesAndPlaces.length));
+		(mouseX < width/2 && mouseY > height/2) ? loadFace(i) : loadPlace(i);
 		isPressed = true;
 	}
 
