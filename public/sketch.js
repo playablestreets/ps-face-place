@@ -22,8 +22,6 @@ const bgColors = [
 ];
 
 
-
-
 let imgPaper = null;
 let flashTime;
 let developTime;
@@ -111,11 +109,11 @@ function loadRandomBird(){
 }
 function loadRandomBgColor(){
 	const i = int(random(0, bgColors.length));
-	// let newColor = color(bgColors[i]);
+	let newColor = color(bgColors[i]);
 	// colorMode(HSB);
 	// bgColor = color(hue(newColor), saturation(newColor), brightness(newColor));
-	// bgColor = newColor;
-	bgColor = color('rgb(103,101,140)');
+	bgColor = newColor;
+	// bgColor = color('rgb(103,101,140)');
 	// bgColor.setAlpha(200);
 	// colorMode(RGB);
 	console.log("loaded random bg color");
@@ -142,7 +140,7 @@ function drawToPolaroidBuffer(){
 		polaroidBuffer.image(imgPlace, margin, margin*0.5, size-2*margin, size-2*margin);
 		
 		if(bgColor){
-			blendMode(MULTIPLY);
+			blendMode(BURN);
 			bgColor.setAlpha(210);
 			polaroidBuffer.fill(bgColor);
 			polaroidBuffer.rect(margin, margin*0.5, size-2*margin, size-2*margin);
