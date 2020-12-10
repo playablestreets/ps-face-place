@@ -26,6 +26,7 @@ let imgPaper = null;
 let flashTime;
 let developTime;
 let developDuration = 3000;
+let isDeveloping = true;
 
 //------------------------------------------------------------------
 //GET DYNAMIC DATA
@@ -159,7 +160,7 @@ function drawToPolaroidBuffer(){
 			// blendMode(BLEND);
 		}
 		polaroidBuffer.fill(255);
-		polaroidBuffer.blend(imgPlace, 0, 0, imgPlace.width, imgPlace.height,  margin, margin*0.5, size-2*margin, size-2*margin, MULTIPLY);
+		polaroidBuffer.blend(imgPlace, 0, 0, imgPlace.width, imgPlace.height,  int(margin), int(margin*0.5), int(size-2*margin), int(size-2*margin), MULTIPLY);
 		pop();
 	}
 
@@ -304,7 +305,7 @@ function draw() {
 	// image(imgFaceBuffer, 0, 0);
 	// drawToPolaroidBuffer();
 	drawPolaroid();
-	drawTouch();
+	// drawTouch();
 	drawFlash();
 
 	if (state === 'loading')  background(0, 0, 0, 50) ;
@@ -349,9 +350,10 @@ function drawTouch() {
 
 function drawFlash(){
 
-	let flashRamp = map(millis() - flashTime, 0, 500, 255, 0);
+	let flashRamp = int(map(millis() - flashTime, 0, 500, 255, 0));
 
 	if(flashRamp > 0){
+		console.log(flashRamp);
 		push();
 		noStroke();
 		fill(255, pow(flashRamp,1.05));
