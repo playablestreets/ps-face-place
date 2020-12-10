@@ -302,9 +302,6 @@ function draw() {
 		// console.log('yo');
 	}
 	
-	
-
-	
 
 	// background(bgColors[0], 0.5);
 	// background('rgba(255,0,0, 0.1)');
@@ -317,11 +314,7 @@ function draw() {
 	// translate(width/2 - size * 0.2, height - size * 0.8);
 	// scale(0.7);
 	
-
-	// image(imgFaceBuffer, 0, 0);
-	// drawToPolaroidBuffer();
 	drawPolaroid();
-	// drawTouch();
 	drawFlash();
 
 	if (state === 'loading')  background(0, 0, 0, 50) ;
@@ -369,7 +362,6 @@ function drawFlash(){
 	let flashRamp = int(map(millis() - flashTime, 0, flashDuration, 255, 0));
 
 	if(flashRamp > 0){
-		// console.log(flashRamp);
 		push();
 		noStroke();
 		fill(255, pow(flashRamp,1.05));
@@ -432,8 +424,8 @@ function touchEnded() {
 
 function reloadPage(){
 	let addr = window.location.href;
-  // let dest = addr.split('?')[0] + '?' + currentSlug;
-  let dest = addr;
+  let dest = addr.split('?')[0];
+  // let dest = addr;
   // console.log(dest);
   location.replace(dest); //do this instead, naviagting to current instrument
 
