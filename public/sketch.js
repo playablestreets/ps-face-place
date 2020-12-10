@@ -21,6 +21,9 @@ const bgColors = [
 ];
 
 let imgPaper = null;
+let flashTime;
+let developTime;
+let developDuration = 5000;
 
 //------------------------------------------------------------------
 //GET DYNAMIC DATA
@@ -72,6 +75,11 @@ function loadRandomFace(){
 	const i = int(random(0, facesAndPlaces.length));
 	imgFace = loadImage(facesAndPlaces[i].face, ()=>{
 		console.log("loaded random face");
+
+		if(imgFace && imgPlace){
+			developTime = millis();
+		}
+
 		drawToPolaroidBuffer();
 		redraw();
 	});
@@ -81,6 +89,11 @@ function loadRandomPlace(){
 	imgPlace = loadImage(facesAndPlaces[i].place, ()=>{
 		console.log("loaded random place");
 		loadRandomBgColor();
+
+		if(imgFace && imgPlace){
+			developTime = millis();
+		}
+
 		drawToPolaroidBuffer();
 		redraw();
 	});
@@ -99,60 +112,27 @@ function loadRandomBgColor(){
 	console.log("loaded random bg color");
 	redraw();
 }
-// function drawFaceToBuffer(){
-// 	imgFaceBuffer = createGraphics(windowWidth, windowHeight);
-// 	imgFaceBuffer.fill(255);
-// 	imgFaceBuffer.stroke(0);
-
-// 	let size = min(width, height);
-// 	let faceScale = 0.8;
-// 	if(imgFaceBuffer){
-// 		imgFaceBuffer.clear();
-// 		imgFaceBuffer.push();
-// 		imgFaceBuffer.translate(imgFace.width/2, imgFace.height/2,);
-// 		imgFaceBuffer.rotate(random(-0.0005, 0.0005));
-// 		imgFaceBuffer.translate(-imgFace.width/2, -imgFace.height/2,);
-
-// 		imgFaceBuffer.translate(0, height-size * faceScale);
-// 		imgFaceBuffer.translate(random(1.0), random(1.0));
-// 		imgFaceBuffer.image(imgFace, 0, 0,  size * faceScale,  size * faceScale);
-// 		imgFaceBuffer.pop();
-// 		console.log('face drawn to buffer');
-// 	}
-// }
 
 function drawToPolaroidBuffer(){
+
 	let size = min(width, height);
 	polaroidBuffer = createGraphics(size, size);
 	polaroidBuffer.fill(255);
 	polaroidBuffer.stroke(0);
 
-
-	// let size = min(width, height);
 	let margin = size * 0.1;
-	// size = size - 2 * margin;
 
 	polaroidBuffer.push();
 	polaroidBuffer.background(255);
-	// polaroidBuffer.fill(100);
 	polaroidBuffer.noStroke();
 	
-	// size = min(width, height);
 	
 	if(imgPlace){
 		push();
-		// polaroidBuffer.fill(bgColor);
 		polaroidBuffer.fill(255);
-		// polaroidBuffer.translate(imgPlace.width/2, imgPlace.height/2,);
-		// polaroidBuffer.rotate(random(-0.0005, 0.0005));
-		// polaroidBuffer.translate(-imgPlace.width/2, -imgPlace.height/2,);
-		// polaroidBuffer.translate(width/2 - size/2, height/2 - size/2);
-		// polaroidBuffer.translate(random(1.0), random(1.0));
 		polaroidBuffer.image(imgPlace, margin, margin*0.5, size-2*margin, size-2*margin);
 		
 		blendMode(MULTIPLY);
-	
-		// let bgColor = color(bgColors[0]);
 		if(bgColor){
 			bgColor.setAlpha(100);
 			polaroidBuffer.fill(bgColor);
@@ -167,15 +147,14 @@ function drawToPolaroidBuffer(){
 	let faceScale = 0.6;
 	if(imgFace){
 		polaroidBuffer.push();
-		// translate(imgFace.width/2, imgFace.height/2,);
-		// rotate(random(-0.0005, 0.0005));
-		// translate(-imgFace.width/2, -imgFace.height/2,);
-
-		// translate(0, height-size * faceScale);
-		// translate(random(1.0), random(1.0));
+		polaroidBuffer.fill(255);
 		polaroidBuffer.image(imgFace, 0, size - size * faceScale - margin * 1.5,  size * faceScale,  size * faceScale);
 		polaroidBuffer.pop();
 	}
+	
+	let developRamp = map(millis() - developTime, 0, developDuration, 255, 0);
+	polaroidBuffer.fill(0, pow(developRamp,1.1));
+	polaroidBuffer.rect(margin, margin*0.5, size-2*margin, size-2*margin);
 
 	polaroidBuffer.fill(255);
 	polaroidBuffer.rect(0,0,margin,height); 
@@ -191,9 +170,11 @@ function drawToPolaroidBuffer(){
 function setup() {
 	setState('loading');
 	
+	flashTime = millis();
+
 	canvas = createCanvas(windowWidth, windowHeight);
 	canvas.position(0, 0);
-	frameRate(4);
+	frameRate(10);
 	
 	imgPaper = loadImage('./assets/paper.jpg');
 
@@ -232,7 +213,11 @@ function setState(newState) {
 //------------UPDATE------------------------------------------------------------
 function update() {
 	// check orientation
-  setDisplayState();
+	setDisplayState();
+	if(millis() - developTime < developDuration ){
+		drawToPolaroidBuffer();
+	}
+
 }
 
 function setDisplayState() {
@@ -298,9 +283,9 @@ function draw() {
 	// image(imgFaceBuffer, 0, 0);
 	// drawToPolaroidBuffer();
 	drawPolaroid();
-	// drawPolaroidFrame();
-	
 	drawTouch();
+	drawFlash();
+
 	if (state === 'loading')  background(0, 0, 0, 50) ;
 }
 
@@ -326,6 +311,19 @@ function drawTouch() {
 	}
 }
 
+function drawFlash(){
+
+	let flashRamp = map(millis() - flashTime, 0, 1000, 255, 0);
+
+	if(flashRamp > 0){
+		push();
+		noStroke();
+		fill(255, pow(flashRamp,1.1));
+		rect(0,0,width,height);
+		pop();
+	}
+}
+
 
 //------------INTERACTION------------------------------------------------------------
 //------------INTERACTION------------------------------------------------------------
@@ -334,6 +332,7 @@ function drawTouch() {
 //todo : this is getting called twice on mouseclicks
 function go() {
 
+	flashTime = millis();
 
   if (Tone.context.state != 'running') {
     console.log('starting tone.js');
@@ -341,6 +340,7 @@ function go() {
 	}
 
 	if(!isPressed){
+		drawToPolaroidBuffer();
 		(mouseX < width/2 && mouseY > height/2) ? loadRandomFace() : loadRandomPlace();
 		isPressed = true;
 	}
