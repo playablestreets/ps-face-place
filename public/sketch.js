@@ -313,6 +313,12 @@ function drawPolaroid(){
 		pop();
 		image(polaroidBuffer, width/2-polaroidBuffer.width/2, 0,  polaroidBuffer.width,  polaroidBuffer.height);
 	}else{
+		push();
+		noStroke();
+		fill(50,50);
+		translate(5,5);
+		rect(0, height/2-polaroidBuffer.height/2,  polaroidBuffer.width,  polaroidBuffer.height, 5);
+		pop();
 		image(polaroidBuffer,  0, height/2-polaroidBuffer.height/2,  polaroidBuffer.width,  polaroidBuffer.height);
 	}
 	pop();
