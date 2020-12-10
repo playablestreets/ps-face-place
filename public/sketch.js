@@ -24,6 +24,7 @@ const bgColors = [
 
 let imgPaper = null;
 let flashTime;
+let flashDuration = 1000;
 let developTime;
 let developDuration = 3000;
 let isDeveloping = true;
@@ -365,7 +366,7 @@ function drawTouch() {
 
 function drawFlash(){
 
-	let flashRamp = int(map(millis() - flashTime, 0, 500, 255, 0));
+	let flashRamp = int(map(millis() - flashTime, 0, flashDuration, 255, 0));
 
 	if(flashRamp > 0){
 		// console.log(flashRamp);
