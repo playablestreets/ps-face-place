@@ -349,7 +349,7 @@ function drawTouch() {
 
 function drawFlash(){
 
-	let flashRamp = map(millis() - flashTime, 0, 1000, 255, 0);
+	let flashRamp = map(millis() - flashTime, 0, 500, 255, 0);
 
 	if(flashRamp > 0){
 		push();
