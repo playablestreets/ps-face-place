@@ -318,7 +318,7 @@ function drawFlash(){
 	if(flashRamp > 0){
 		push();
 		noStroke();
-		fill(255, pow(flashRamp,1.1));
+		fill(255, pow(flashRamp,1.05));
 		rect(0,0,width,height);
 		pop();
 	}
