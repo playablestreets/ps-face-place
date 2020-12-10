@@ -254,7 +254,7 @@ function setDisplayState() {
 
 function windowResized(){
 	resizeCanvas(windowWidth, windowHeight);
-	// drawToPolaroidBuffer();
+	drawToPolaroidBuffer();
 }
 
 //------------DRAW------------------------------------------------------------
@@ -269,7 +269,9 @@ function draw() {
 
 	// background(0, 255, 0)
 	// background(255, 1);
-	background(255, 200);
+	resizeCanvas(windowWidth, windowHeight);
+	canvas.position(0, 0);
+	// background(255, 200);
 	fill(255);
 	stroke(0);
 	
@@ -353,7 +355,7 @@ function drawFlash(){
 	let flashRamp = int(map(millis() - flashTime, 0, 500, 255, 0));
 
 	if(flashRamp > 0){
-		console.log(flashRamp);
+		// console.log(flashRamp);
 		push();
 		noStroke();
 		fill(255, pow(flashRamp,1.05));
