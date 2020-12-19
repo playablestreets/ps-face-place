@@ -386,11 +386,10 @@ function go() {
 	}
 
 	if(!isPressed){
-		reloadPage();
-		// drawToPolaroidBuffer();
-		// let i = int(random(0, facesAndPlaces.length));
-		// (mouseX < width/2 && mouseY > height/2) ? loadFace(i) : loadPlace(i);
-		isPressed = true;
+		if(mouseY > 80){
+			reloadPage();
+			isPressed = true;
+		}
 	}
 
 	redraw();
