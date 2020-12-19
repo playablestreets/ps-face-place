@@ -23,11 +23,13 @@ const bgColors = [
 
 
 let imgPaper = null;
+let sharpieText = null;
 let flashTime;
 let flashDuration = 1000;
 let developTime;
 let developDuration = 3000;
 let isDeveloping = true;
+
 
 //------------------------------------------------------------------
 //GET DYNAMIC DATA
@@ -198,6 +200,10 @@ function drawToPolaroidBuffer(){
 //------------SETUP------------------------------------------------------------
 //------------SETUP------------------------------------------------------------
 // let polaroidBuffer;
+// function preload(){
+// 	sharpieFont = loadFont('assets/inconsolata.otf');
+// }
+
 function setup() {
 	setState('loading');
 	
@@ -208,6 +214,7 @@ function setup() {
 	frameRate(10);
 	
 	imgPaper = loadImage('./assets/paper.jpg');
+	sharpieText = loadImage('./assets/sharpietext.png');
 
 	loadRandomBgColor();
 
@@ -335,15 +342,19 @@ function drawPolaroid(){
 		rect(width/2-polaroidBuffer.width/2, 0,  polaroidBuffer.width,  polaroidBuffer.height, 5);
 		pop();
 		image(polaroidBuffer, width/2-polaroidBuffer.width/2, 0,  polaroidBuffer.width,  polaroidBuffer.height);
-	}else{
-		push();
-		noStroke();
-		fill(50,50);
-		translate(5,5);
-		rect(0, height/2-polaroidBuffer.height/2,  polaroidBuffer.width,  polaroidBuffer.height, 5);
-		pop();
-		image(polaroidBuffer,  0, height/2-polaroidBuffer.height/2,  polaroidBuffer.width,  polaroidBuffer.height);
-	}
+		// if(sharpieText)
+		// 	image(sharpieText, width/2-polaroidBuffer.width*0.25, height/2+polaroidBuffer.height/2-polaroidBuffer.height/8,  polaroidBuffer.width*0.5,  polaroidBuffer.height*0.1);
+		}else{
+			push();
+			noStroke();
+			fill(50,50);
+			translate(5,5);
+			rect(0, height/2-polaroidBuffer.height/2,  polaroidBuffer.width,  polaroidBuffer.height, 5);
+			pop();
+			image(polaroidBuffer,  0, height/2-polaroidBuffer.height/2,  polaroidBuffer.width,  polaroidBuffer.height);
+		}
+		if(sharpieText)
+			image(sharpieText, width/2-polaroidBuffer.width*0.25, height/2+polaroidBuffer.height/2-polaroidBuffer.height/8,  polaroidBuffer.width*0.5,  polaroidBuffer.height*0.1);
 	pop();
 }
 
